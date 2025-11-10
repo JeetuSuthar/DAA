@@ -1,36 +1,41 @@
-def is_safe(queens, row, col):
-    for c in range(col):
-        if queens[c] == row or abs(queens[c] - row) == abs(c - col):
+
+def is_safe(queens,row,col):
+    for c in range(len(queens)):
+        if queens[c] == -1 or c == col:
+            continue
+        if queens[c]==row or abs(queens[c]-row)==abs(c-col):
             return False
     return True
-
-def solve_n_queens_util(queens, col, n):
-    if col == n:
+    
+def solve(queens,col,n):
+    if col==n:
         return True
+    if queens[col] != -1: 
+        return solve(queens,col+1,n)
     for row in range(n):
-        if is_safe(queens, row, col):
-            queens[col] = row
-            if solve_n_queens_util(queens, col + 1, n):
+        if is_safe(queens,row,col):
+            queens[col]=row
+            if solve(queens,col+1,n):
                 return True
+            queens[col]=-1
     return False
-
-def print_solution(queens):
-    n = len(queens)
+        
+def print_sol(queens,n):
     for r in range(n):
         for c in range(n):
-            if queens[c] == r:
-                print("Q", end=" ")
-            else:
-                print(".", end=" ")
+            if queens[c]==r:
+                print("Q",end=" ")
+            else :
+                print("*", end=" ")
         print()
     print()
+    
+n=int(input("enter"))
+queens=[-1]*n
+fr=int(input("row"))
+fc=int(input("col"))
+queens[fc]=fr
 
-n = int(input("Enter value of N: "))
-queens = [-1] * n
-found = solve_n_queens_util(queens, 0, n)
-
+found=solve(queens,0,n)
 if found:
-    print(f"Found a solution for {n}-Queens problem:")
-    print_solution(queens)
-else:
-    print("Solution does not exist")
+    print_sol(queens,n)
